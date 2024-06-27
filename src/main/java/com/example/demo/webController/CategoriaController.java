@@ -1,10 +1,10 @@
+// CategoriaController.java
 package com.example.demo.webController;
 
 import com.example.demo.domain.dto.CategoriaConEventosDTO;
 import com.example.demo.domain.dto.CategoriaDTO;
 import com.example.demo.services.CategoriaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoriaController {
 
-    @Autowired
-    private CategoriaService categoriaService;
+    private final CategoriaService categoriaService;
 
     @PostMapping("/crear")
     public ResponseEntity<CategoriaDTO> crearCategoria(@RequestBody CategoriaDTO categoriaDTO) {
@@ -36,7 +35,6 @@ public class CategoriaController {
         List<CategoriaConEventosDTO> categorias = categoriaService.obtenerCategoriasConEventos();
         return ResponseEntity.ok(categorias);
     }
-
 
     @GetMapping("/obtener/{id}")
     public ResponseEntity<CategoriaDTO> obtenerCategoriaPorId(@PathVariable Long id) {

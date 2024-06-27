@@ -1,10 +1,8 @@
-// Evento.java
 package com.example.demo.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,8 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"titulo", "usuario_id"}))
-public class Evento {
+public class Nota {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,36 +18,35 @@ public class Evento {
 
     private String titulo;
 
+    @Lob
     private String contenido;
-
-    private LocalDate fecha;
 
     private LocalDateTime fechaCreacion;
 
     private LocalDateTime fechaActualizacion;
 
+    private String imagenUrl;
+
     private String prioridad;
 
-    private boolean completado = false;
-
-    private LocalDateTime recordatorio;
+    private String categoria;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = true)
-    private Categoria categoria;
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.fechaActualizacion = LocalDateTime.now();
-    }
+    @JoinColumn(name = "libreta_id", nullable = true)
+    private Libreta libreta;
 
     @PrePersist
     protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
+        this.fechaActualizacion = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
         this.fechaActualizacion = LocalDateTime.now();
     }
 }

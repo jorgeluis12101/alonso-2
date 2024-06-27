@@ -1,3 +1,4 @@
+// Usuario.java
 package com.example.demo.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -49,7 +50,6 @@ public class Usuario implements UserDetails {
 
     @Column(nullable = false, length = 100)
     private String password;
-
 
     @Enumerated(EnumType.STRING)
     private Role role;

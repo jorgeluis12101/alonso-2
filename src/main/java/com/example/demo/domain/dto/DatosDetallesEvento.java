@@ -21,7 +21,7 @@ public class DatosDetallesEvento {
     private String usuario;
     private String categoria;
 
-    // Constructor que acepta todos los campos
+
     public DatosDetallesEvento(Long id, String titulo, String contenido, LocalDate fecha, LocalDateTime fechaCreacion, LocalDateTime fechaActualizacion, String prioridad, boolean completado, LocalDateTime recordatorio, String usuario, String categoria) {
         this.id = id;
         this.titulo = titulo;

@@ -56,13 +56,6 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
-    @Transactional
-    public void cambiarRolUsuario(Long usuarioId, Role nuevoRol) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setRole(nuevoRol);
-        usuarioRepository.save(usuario);
-    }
 
     @Transactional
     public void updateUsuario(Usuario usuario, Long id) {

@@ -11,5 +11,5 @@ public class EventoDTO {
     private String contenido;
     private String fecha;
     private String prioridad;
-    private boolean completado; // Asegúrate de que esta propiedad esté incluida
+    private boolean completado;
 }

@@ -1,3 +1,4 @@
+// Categoria.java
 package com.example.demo.domain.entity;
 
 import jakarta.persistence.*;
@@ -20,4 +21,8 @@ public class Categoria {
 
     @OneToMany(mappedBy = "categoria")
     private List<Evento> eventos;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 }

@@ -21,8 +21,6 @@ public class EventoScheduler {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @Scheduled(fixedRate = 60000) // Ejecutar cada minuto
     public void enviarRecordatorios() {
@@ -39,7 +37,7 @@ public class EventoScheduler {
                                 "\nFecha: " + evento.getFecha() +
                                 "\n\n¡No olvides completar tu evento!\n\nSaludos,\nTu Aplicación de Eventos"
                 );
-                evento.setCompletado(true); // Marcar evento como completado después de enviar el recordatorio
+                evento.setCompletado(true);
                 eventoRepository.save(evento);
             } catch (Exception e) {
                 e.printStackTrace();

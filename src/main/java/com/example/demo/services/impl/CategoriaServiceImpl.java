@@ -1,39 +1,54 @@
+// CategoriaServiceImpl.java
 package com.example.demo.services.impl;
 
 import com.example.demo.domain.dto.CategoriaConEventosDTO;
 import com.example.demo.domain.dto.CategoriaDTO;
 import com.example.demo.domain.dto.EventoDTO;
 import com.example.demo.domain.entity.Categoria;
-import com.example.demo.domain.entity.Evento;
+import com.example.demo.domain.entity.Usuario;
 import com.example.demo.infra.repository.CategoriaRepository;
-import com.example.demo.infra.repository.EventoRepository;
+import com.example.demo.infra.repository.UsuarioRepository;
 import com.example.demo.services.CategoriaService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriaServiceImpl implements CategoriaService {
 
-    @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    @Autowired
-    private EventoRepository eventoRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public CategoriaDTO crearCategoria(CategoriaDTO categoriaDTO) {
-        Categoria categoria = convertToEntity(categoriaDTO);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+
+        Categoria categoria = Categoria.builder()
+                .nombre(categoriaDTO.getNombre())
+                .usuario(usuario)
+                .build();
+
         Categoria savedCategoria = categoriaRepository.save(categoria);
         return convertToDTO(savedCategoria);
     }
 
     @Override
     public List<CategoriaDTO> obtenerCategorias() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+
+        List<Categoria> categorias = categoriaRepository.findCategoriasByUsuarioId(usuario.getId());
         return categorias.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -62,7 +77,12 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public List<CategoriaConEventosDTO> obtenerCategoriasConEventos() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+
+        List<Categoria> categorias = categoriaRepository.findCategoriasByUsuarioId(usuario.getId());
         return categorias.stream().map(this::convertToCategoriaConEventosDTO).collect(Collectors.toList());
     }
 
@@ -84,23 +104,12 @@ public class CategoriaServiceImpl implements CategoriaService {
                         evento.getId(),
                         evento.getTitulo(),
                         evento.getContenido(),
-                        evento.getFecha() != null ? evento.getFecha().toString() : null, // Comprobación nula para fecha
+                        evento.getFecha() != null ? evento.getFecha().toString() : null,
                         evento.getPrioridad(),
-                        evento.isCompletado() // Asegúrate de que este campo se mapee correctamente
+                        evento.isCompletado()
                 ))
                 .collect(Collectors.toList());
 
         return new CategoriaConEventosDTO(categoria.getId(), categoria.getNombre(), eventoDTOs);
-    }
-
-    private Categoria convertToEntity(CategoriaDTO categoriaDTO) {
-        return new Categoria(categoriaDTO.getId(), categoriaDTO.getNombre(), null);
-    }
-
-    public void marcarComoCompletado(Long id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado: " + id));
-        evento.setCompletado(true);
-        eventoRepository.save(evento);
     }
 }

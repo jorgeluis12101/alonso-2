@@ -18,5 +18,5 @@ public interface EventoService {
     void actualizarFechaEvento(Long eventoId, LocalDate nuevaFecha);
 
     void actualizarEstadoEvento(Long eventoId, boolean completado);
-    Evento obtenerEventoPorId(Long eventoId);
+
 }

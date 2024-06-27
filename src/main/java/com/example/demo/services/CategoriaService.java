@@ -14,5 +14,5 @@ public interface CategoriaService {
     void eliminarCategoria(Long id);
     List<CategoriaConEventosDTO> obtenerCategoriasConEventos();
     CategoriaConEventosDTO obtenerCategoriaConEventosPorId(Long id);
-    CategoriaConEventosDTO convertToCategoriaConEventosDTO(Categoria categoria); // Asegúrate de que este método esté aquí
+    CategoriaConEventosDTO convertToCategoriaConEventosDTO(Categoria categoria);
 }

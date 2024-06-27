@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventoRepository extends JpaRepository<Evento, Long> {
-    List<Evento> findByUsuarioId(Long usuarioId);
     List<Evento> findByUsuarioIdAndCompletadoFalse(Long usuarioId);
     List<Evento> findByRecordatorioBeforeAndCompletadoFalse(LocalDateTime fecha);
 }
